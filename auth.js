@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 // A secret key for signing JWT tokens.
-const secretKey = 'Scholes';
+const secretKey = process.env.secretKey || 'default';
 
 // A Simulated user.
 
 const users = [
-    {id: 1, username: 'Paul', password: 'ps18'},
-    {id: 2, username: 'Arron', password: 'al23'}
+    {id: 1, username: 'Alicia', password: 'AL20'},
+    {id: 2, username: 'Arron', password: 'AR23'}
 ];
 
 // A function to authenticate user and generate JWT token
@@ -20,6 +20,23 @@ const authUser = (username, password) => {
     }
 
     // Generate JWT token user id as playload.
+    const token = jwt.sign({id: user.id}, secretKey,{expiresIn: '1h'})
+    return token;
+}
 
-    
+// Then we need a function to verify a JWT token
+
+const verifyToken = (token) => {
+    try{
+        const decoded = jwt.verify(token,secretKey);
+        return decoded;
+    } catch (error){
+        return null;
+    }
+}
+
+module.exports = {
+    users,
+    authUser,
+    verifyToken
 }
