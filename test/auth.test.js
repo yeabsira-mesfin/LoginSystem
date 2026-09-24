@@ -2,17 +2,22 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const request = require("supertest");
 
-process.env.JWT_SECRET = "test-only-secret-that-is-longer-than-thirty-two-chars";
+process.env.JWT_SECRET = "x".repeat(48);
 
 const { createApp } = require("../src/app");
-const { clearStores } = require("../src/store");
+const { clearStores, usersByEmail } = require("../src/store");
 
 test.beforeEach(() => clearStores());
 
 async function registerAndLogin(app, role = "user", email = "user@example.com") {
   await request(app)
     .post("/auth/register")
-    .send({ email, password: "Correct-Horse-42!", role });
+    .send({ email, password: "Correct-Horse-42!" });
+
+  if (role === "admin") {
+    const user = usersByEmail.get(email);
+    user.role = "admin";
+  }
 
   const login = await request(app)
     .post("/auth/login")
