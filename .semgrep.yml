@@ -1,0 +1,13 @@
+rules:
+  - id: node-dangerous-eval
+    message: Avoid dynamic code evaluation.
+    severity: ERROR
+    languages: [javascript]
+    pattern: eval(...)
+  - id: node-child-process-exec
+    message: Review process execution and do not pass untrusted input to a shell.
+    severity: WARNING
+    languages: [javascript]
+    pattern-either:
+      - pattern: require("child_process").exec(...)
+      - pattern: require('child_process').exec(...)
