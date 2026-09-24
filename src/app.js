@@ -43,7 +43,6 @@ function createApp() {
   app.post("/auth/register", async (req, res) => {
     const email = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "";
     const password = req.body?.password;
-    const role = req.body?.role === "admin" ? "admin" : "user";
 
     if (!validEmail(email) || !validPassword(password)) {
       return res.status(400).json({ error: "invalid registration data" });
@@ -57,7 +56,7 @@ function createApp() {
       id: newUserId(),
       email,
       passwordHash: await hashPassword(password),
-      role
+      role: "user"
     };
 
     usersByEmail.set(email, user);
